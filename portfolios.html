@@ -1,0 +1,890 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Parallax AI - Portfolio Impact Reports - 2026-03-11</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      background: #0f172a;
+      color: #e2e8f0;
+      line-height: 1.6;
+    }
+    .container { max-width: 1200px; margin: 0 auto; padding: 20px; }
+
+    .header {
+      text-align: center;
+      padding: 30px 0 20px;
+      border-bottom: 1px solid #1e293b;
+      margin-bottom: 30px;
+    }
+    .header h1 { font-size: 1.8rem; color: #f8fafc; }
+    .header .subtitle { color: #94a3b8; font-size: 0.95rem; margin-top: 5px; }
+    .header .date { color: #60a5fa; font-size: 1.1rem; margin-top: 8px; }
+
+    .nav {
+      text-align: center;
+      margin-bottom: 25px;
+    }
+    .nav a {
+      color: #60a5fa;
+      text-decoration: none;
+      padding: 8px 18px;
+      border: 1px solid #334155;
+      border-radius: 6px;
+      font-size: 0.9rem;
+      margin: 0 5px;
+      display: inline-block;
+    }
+    .nav a:hover { background: #1e293b; }
+    .nav a.active { background: #3b82f6; color: #fff; border-color: #3b82f6; }
+
+    .stats {
+      display: flex;
+      gap: 15px;
+      justify-content: center;
+      flex-wrap: wrap;
+      margin-bottom: 30px;
+    }
+    .stat-box {
+      background: #1e293b;
+      border-radius: 8px;
+      padding: 12px 20px;
+      text-align: center;
+      min-width: 120px;
+    }
+    .stat-box .stat-value { font-size: 1.4rem; font-weight: 700; color: #f8fafc; }
+    .stat-box .stat-label { font-size: 0.75rem; color: #94a3b8; text-transform: uppercase; }
+
+    .card {
+      background: #1e293b;
+      border-radius: 10px;
+      padding: 16px 20px;
+      margin-bottom: 12px;
+      cursor: pointer;
+      transition: background 0.2s;
+      border-left: 4px solid #334155;
+    }
+    .card:hover { background: #253249; }
+    .card-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .card-title { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
+    .portfolio-name { font-weight: 700; font-size: 1.05rem; color: #f8fafc; }
+    .ev-display { font-size: 1.3rem; font-weight: 700; white-space: nowrap; }
+    .card-row {
+      display: flex; gap: 18px; align-items: center; flex-wrap: wrap;
+      margin: 6px 0; font-size: 0.85rem;
+    }
+    .ticker { font-weight: 700; color: #60a5fa; }
+    .sentiment { text-transform: capitalize; font-weight: 600; }
+    .position, .impact { color: #94a3b8; }
+    .card-summary { color: #cbd5e1; margin: 8px 0 6px; font-size: 0.9rem; }
+
+    .badge {
+      display: inline-block;
+      padding: 2px 8px;
+      border-radius: 4px;
+      font-size: 0.7rem;
+      font-weight: 600;
+      text-transform: uppercase;
+    }
+
+    .card-detail {
+      display: none;
+      margin-top: 15px;
+      padding-top: 15px;
+      border-top: 1px solid #334155;
+    }
+    .card-detail.open { display: block; }
+
+    .scenarios { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; margin-bottom: 15px; }
+    @media (max-width: 700px) { .scenarios { grid-template-columns: 1fr; } }
+    .scenario {
+      background: #0f172a;
+      border-radius: 8px;
+      padding: 12px;
+    }
+    .scenario-header { font-weight: 600; font-size: 0.85rem; color: #94a3b8; margin-bottom: 4px; }
+    .scenario-impact { font-size: 1.2rem; font-weight: 700; margin-bottom: 6px; }
+    .scenario-desc { font-size: 0.8rem; color: #94a3b8; }
+
+    .qualitative-row {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 10px;
+      margin-bottom: 15px;
+    }
+    @media (max-width: 700px) { .qualitative-row { grid-template-columns: repeat(2, 1fr); } }
+    .qual-item {
+      background: #0f172a;
+      border-radius: 6px;
+      padding: 8px 12px;
+    }
+    .qual-label { font-size: 0.7rem; color: #64748b; display: block; text-transform: uppercase; }
+    .qual-value { font-size: 0.9rem; color: #e2e8f0; font-weight: 600; }
+
+    .monitoring, .key-dates { margin-bottom: 10px; }
+    .monitoring h4, .key-dates h4 { font-size: 0.85rem; color: #94a3b8; margin-bottom: 6px; }
+    .monitoring ul, .key-dates ul { padding-left: 20px; font-size: 0.85rem; color: #cbd5e1; }
+    .monitoring li, .key-dates li { margin-bottom: 4px; }
+
+    .report-link {
+      display: inline-block;
+      margin-top: 10px;
+      padding: 8px 16px;
+      background: #3b82f6;
+      color: #fff;
+      border-radius: 6px;
+      text-decoration: none;
+      font-size: 0.85rem;
+      font-weight: 600;
+    }
+    .report-link:hover { background: #2563eb; }
+
+    .footer {
+      text-align: center;
+      padding: 30px 0;
+      color: #475569;
+      font-size: 0.8rem;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="header">
+      <h1>Parallax AI -- Portfolio Impact Reports</h1>
+      <div class="subtitle">How breaking news affects your portfolios</div>
+      <div class="date">2026-03-11</div>
+    </div>
+
+    <div class="nav">
+      <a href="index.html">Breaking News</a>
+      <a href="portfolios.html" class="active">Portfolio Impact</a>
+    </div>
+
+    <div class="stats">
+      <div class="stat-box">
+        <div class="stat-value">11</div>
+        <div class="stat-label">Reports</div>
+      </div>
+      <div class="stat-box">
+        <div class="stat-value">11</div>
+        <div class="stat-label">Portfolios</div>
+      </div>
+      <div class="stat-box">
+        <div class="stat-value">6</div>
+        <div class="stat-label">Tickers</div>
+      </div>
+      <div class="stat-box">
+        <div class="stat-value" style="color: #22c55e">10</div>
+        <div class="stat-label">Positive EV</div>
+      </div>
+      <div class="stat-box">
+        <div class="stat-value" style="color: #ef4444">1</div>
+        <div class="stat-label">Negative EV</div>
+      </div>
+    </div>
+
+    
+        <div class="card" onclick="toggleDetail('pdetail-0')">
+          <div class="card-header">
+            <div class="card-title">
+              <span class="portfolio-name">US Growth & Momentum</span>
+              <span class="badge" style="background:#ef444433;color:#ef4444">HIGH</span>
+            </div>
+            <div class="ev-display" style="color: #ef4444">
+              <span class="ev-value">-2.74%</span>
+            </div>
+          </div>
+          <div class="card-row">
+            <span class="ticker">APP.O</span>
+            <span class="sentiment" style="color:#ef4444">negative</span>
+            <span class="position">Position: 20.0%</span>
+            <span class="impact">Portfolio impact: -1.90%</span>
+          </div>
+          <div class="card-summary">APP drops 7.6% on SEC probe, valuation fears, and competition.</div>
+
+          <div class="card-detail" id="pdetail-0">
+            <div class="scenarios">
+              <div class="scenario bull">
+                <div class="scenario-header">Bull Case (20%)</div>
+                <div class="scenario-impact" style="color: #22c55e">+1.44%</div>
+                <div class="scenario-desc">SEC investigation concludes with minimal impact; strong Q4 2025 results drive recovery as short seller claims are refuted.</div>
+              </div>
+              <div class="scenario base">
+                <div class="scenario-header">Base Case (40%)</div>
+                <div class="scenario-impact">-1.90%</div>
+                <div class="scenario-desc">Stock volatility persists with moderate decline as market digests rich valuation and competitive threats from Google.</div>
+              </div>
+              <div class="scenario bear">
+                <div class="scenario-header">Bear Case (40%)</div>
+                <div class="scenario-impact" style="color: #ef4444">-5.66%</div>
+                <div class="scenario-desc">SEC enforcement action targets data collection; short seller allegations gain traction, causing significant multiple compression.</div>
+              </div>
+            </div>
+
+            <div class="qualitative-row">
+              <div class="qual-item">
+                <span class="qual-label">Revenue</span>
+                <span class="qual-value">Mixed</span>
+              </div>
+              <div class="qual-item">
+                <span class="qual-label">Profitability</span>
+                <span class="qual-value">Mixed</span>
+              </div>
+              <div class="qual-item">
+                <span class="qual-label">Priced In?</span>
+                <span class="qual-value">Partially Priced</span>
+              </div>
+              <div class="qual-item">
+                <span class="qual-label">Nature</span>
+                <span class="qual-value">Structural shift</span>
+              </div>
+            </div>
+
+            <div class="monitoring"><h4>Key Indicators to Watch</h4><ul><li><span style="color:#ef4444;font-weight:600">[Critical]</span> Senior leadership hires for social platform (Chief Product Officer, VP Engineering) <span style="color:#64748b">(monthly)</span></li><li><span style="color:#ef4444;font-weight:600">[Critical]</span> Q1 2026 guidance for core ad-tech investment and margin guidance <span style="color:#64748b">(quarterly)</span></li><li><span style="color:#f59e0b;font-weight:600">[Important]</span> Free cash flow conversion and capital expenditure guidance for social platform <span style="color:#64748b">(quarterly)</span></li><li><span style="color:#f59e0b;font-weight:600">[Important]</span> Competitive responses from Meta and TikTok targeting gaming/DTC advertisers <span style="color:#64748b">(monthly)</span></li></ul></div>
+            <div class="key-dates"><h4>Historical Precedents</h4><ul><li><strong>Meta's transition from advertising platform to metaverse focus with Reality Labs investment</strong> -- Significant investor skepticism and margin pressure during transition period, though core advertising business remained resilient</li><li><strong>Amazon's long-term investment in AWS while maintaining e-commerce focus</strong> -- Initial margin pressure followed by substantial value creation as new platform achieved scale and higher margins</li></ul></div>
+            <a href="reports/f576ae88-9964-4512-8c72-546bd307743a.html" target="_blank" class="report-link">View Full Report</a>
+          </div>
+        </div>
+        
+        <div class="card" onclick="toggleDetail('pdetail-1')">
+          <div class="card-header">
+            <div class="card-title">
+              <span class="portfolio-name">Concentrated NVDA Position</span>
+              <span class="badge" style="background:#ef444433;color:#ef4444">HIGH</span>
+            </div>
+            <div class="ev-display" style="color: #22c55e">
+              <span class="ev-value">+2.39%</span>
+            </div>
+          </div>
+          <div class="card-row">
+            <span class="ticker">NVDA.O</span>
+            <span class="sentiment" style="color:#22c55e">positive</span>
+            <span class="position">Position: 70.0%</span>
+            <span class="impact">Portfolio impact: +1.61%</span>
+          </div>
+          <div class="card-summary">NVDA climbs 2.7% as GTC 2026 Rubin unveiling sparks rally.</div>
+
+          <div class="card-detail" id="pdetail-1">
+            <div class="scenarios">
+              <div class="scenario bull">
+                <div class="scenario-header">Bull Case (32%)</div>
+                <div class="scenario-impact" style="color: #22c55e">+10.15%</div>
+                <div class="scenario-desc">Rubin delivers 3.3x+ performance leap; aggressive SaaS expansion announced; stock breaks $200.</div>
+              </div>
+              <div class="scenario base">
+                <div class="scenario-header">Base Case (45%)</div>
+                <div class="scenario-impact">+1.61%</div>
+                <div class="scenario-desc">Successful keynote maintaining leadership; minor profit taking after 2.7% pre-event surge.</div>
+              </div>
+              <div class="scenario bear">
+                <div class="scenario-header">Bear Case (23%)</div>
+                <div class="scenario-impact" style="color: #ef4444">-6.86%</div>
+                <div class="scenario-desc">Specs miss 3.3x target or guidance disappoints; sharp 'sell the news' reversal from highs.</div>
+              </div>
+            </div>
+
+            <div class="qualitative-row">
+              <div class="qual-item">
+                <span class="qual-label">Revenue</span>
+                <span class="qual-value">Improving</span>
+              </div>
+              <div class="qual-item">
+                <span class="qual-label">Profitability</span>
+                <span class="qual-value">Mixed</span>
+              </div>
+              <div class="qual-item">
+                <span class="qual-label">Priced In?</span>
+                <span class="qual-value">Partially Priced</span>
+              </div>
+              <div class="qual-item">
+                <span class="qual-label">Nature</span>
+                <span class="qual-value">Structural shift</span>
+              </div>
+            </div>
+
+            <div class="monitoring"><h4>Key Indicators to Watch</h4><ul><li><span style="color:#ef4444;font-weight:600">[Critical]</span> NVDA Q4 FY2027 revenue guidance vs 60% growth consensus <span style="color:#64748b">(quarterly)</span></li><li><span style="color:#ef4444;font-weight:600">[Critical]</span> Meta capex deployment cadence and actual GPU takedown rates <span style="color:#64748b">(quarterly)</span></li><li><span style="color:#f59e0b;font-weight:600">[Important]</span> TSMC CoWoS packaging capacity utilization rate <span style="color:#64748b">(monthly)</span></li><li><span style="color:#f59e0b;font-weight:600">[Important]</span> Custom ASIC market share in AI inference workloads <span style="color:#64748b">(quarterly)</span></li></ul></div>
+            <div class="key-dates"><h4>Historical Precedents</h4><ul><li><strong>NVDA's crypto mining boom and bust cycle 2017-2018</strong> -- Revenue volatility when single-use case demand collapsed, highlighting customer concentration risks</li><li><strong>Intel's foundry capacity constraints during PC boom 2018-2020</strong> -- Supply shortages limited revenue upside despite strong demand, benefiting competitors like AMD</li></ul></div>
+            <a href="reports/a23b2bcd-11cb-4a3e-a2e3-4e94c9ebff76.html" target="_blank" class="report-link">View Full Report</a>
+          </div>
+        </div>
+        
+        <div class="card" onclick="toggleDetail('pdetail-2')">
+          <div class="card-header">
+            <div class="card-title">
+              <span class="portfolio-name">rt_01</span>
+              <span class="badge" style="background:#f59e0b33;color:#f59e0b">MEDIUM</span>
+            </div>
+            <div class="ev-display" style="color: #22c55e">
+              <span class="ev-value">+1.06%</span>
+            </div>
+          </div>
+          <div class="card-row">
+            <span class="ticker">NVDA.O</span>
+            <span class="sentiment" style="color:#22c55e">positive</span>
+            <span class="position">Position: 31.0%</span>
+            <span class="impact">Portfolio impact: +0.71%</span>
+          </div>
+          <div class="card-summary">NVDA climbs 2.7% as GTC 2026 Rubin unveiling sparks rally.</div>
+
+          <div class="card-detail" id="pdetail-2">
+            <div class="scenarios">
+              <div class="scenario bull">
+                <div class="scenario-header">Bull Case (32%)</div>
+                <div class="scenario-impact" style="color: #22c55e">+4.50%</div>
+                <div class="scenario-desc">Rubin delivers 3.3x+ performance leap; aggressive SaaS expansion announced; stock breaks $200.</div>
+              </div>
+              <div class="scenario base">
+                <div class="scenario-header">Base Case (45%)</div>
+                <div class="scenario-impact">+0.71%</div>
+                <div class="scenario-desc">Successful keynote maintaining leadership; minor profit taking after 2.7% pre-event surge.</div>
+              </div>
+              <div class="scenario bear">
+                <div class="scenario-header">Bear Case (23%)</div>
+                <div class="scenario-impact" style="color: #ef4444">-3.04%</div>
+                <div class="scenario-desc">Specs miss 3.3x target or guidance disappoints; sharp 'sell the news' reversal from highs.</div>
+              </div>
+            </div>
+
+            <div class="qualitative-row">
+              <div class="qual-item">
+                <span class="qual-label">Revenue</span>
+                <span class="qual-value">Improving</span>
+              </div>
+              <div class="qual-item">
+                <span class="qual-label">Profitability</span>
+                <span class="qual-value">Mixed</span>
+              </div>
+              <div class="qual-item">
+                <span class="qual-label">Priced In?</span>
+                <span class="qual-value">Partially Priced</span>
+              </div>
+              <div class="qual-item">
+                <span class="qual-label">Nature</span>
+                <span class="qual-value">Structural shift</span>
+              </div>
+            </div>
+
+            <div class="monitoring"><h4>Key Indicators to Watch</h4><ul><li><span style="color:#ef4444;font-weight:600">[Critical]</span> NVDA Q4 FY2027 revenue guidance vs 60% growth consensus <span style="color:#64748b">(quarterly)</span></li><li><span style="color:#ef4444;font-weight:600">[Critical]</span> Meta capex deployment cadence and actual GPU takedown rates <span style="color:#64748b">(quarterly)</span></li><li><span style="color:#f59e0b;font-weight:600">[Important]</span> TSMC CoWoS packaging capacity utilization rate <span style="color:#64748b">(monthly)</span></li><li><span style="color:#f59e0b;font-weight:600">[Important]</span> Custom ASIC market share in AI inference workloads <span style="color:#64748b">(quarterly)</span></li></ul></div>
+            <div class="key-dates"><h4>Historical Precedents</h4><ul><li><strong>NVDA's crypto mining boom and bust cycle 2017-2018</strong> -- Revenue volatility when single-use case demand collapsed, highlighting customer concentration risks</li><li><strong>Intel's foundry capacity constraints during PC boom 2018-2020</strong> -- Supply shortages limited revenue upside despite strong demand, benefiting competitors like AMD</li></ul></div>
+            <a href="reports/b87c4de4-5c89-43f8-a9e5-5ff01b5599db.html" target="_blank" class="report-link">View Full Report</a>
+          </div>
+        </div>
+        
+        <div class="card" onclick="toggleDetail('pdetail-3')">
+          <div class="card-header">
+            <div class="card-title">
+              <span class="portfolio-name">US Semiconductor & Hardware</span>
+              <span class="badge" style="background:#f59e0b33;color:#f59e0b">MEDIUM</span>
+            </div>
+            <div class="ev-display" style="color: #22c55e">
+              <span class="ev-value">+0.85%</span>
+            </div>
+          </div>
+          <div class="card-row">
+            <span class="ticker">NVDA.O</span>
+            <span class="sentiment" style="color:#22c55e">positive</span>
+            <span class="position">Position: 25.0%</span>
+            <span class="impact">Portfolio impact: +0.57%</span>
+          </div>
+          <div class="card-summary">NVDA climbs 2.7% as GTC 2026 Rubin unveiling sparks rally.</div>
+
+          <div class="card-detail" id="pdetail-3">
+            <div class="scenarios">
+              <div class="scenario bull">
+                <div class="scenario-header">Bull Case (32%)</div>
+                <div class="scenario-impact" style="color: #22c55e">+3.62%</div>
+                <div class="scenario-desc">Rubin delivers 3.3x+ performance leap; aggressive SaaS expansion announced; stock breaks $200.</div>
+              </div>
+              <div class="scenario base">
+                <div class="scenario-header">Base Case (45%)</div>
+                <div class="scenario-impact">+0.57%</div>
+                <div class="scenario-desc">Successful keynote maintaining leadership; minor profit taking after 2.7% pre-event surge.</div>
+              </div>
+              <div class="scenario bear">
+                <div class="scenario-header">Bear Case (23%)</div>
+                <div class="scenario-impact" style="color: #ef4444">-2.45%</div>
+                <div class="scenario-desc">Specs miss 3.3x target or guidance disappoints; sharp 'sell the news' reversal from highs.</div>
+              </div>
+            </div>
+
+            <div class="qualitative-row">
+              <div class="qual-item">
+                <span class="qual-label">Revenue</span>
+                <span class="qual-value">Improving</span>
+              </div>
+              <div class="qual-item">
+                <span class="qual-label">Profitability</span>
+                <span class="qual-value">Mixed</span>
+              </div>
+              <div class="qual-item">
+                <span class="qual-label">Priced In?</span>
+                <span class="qual-value">Partially Priced</span>
+              </div>
+              <div class="qual-item">
+                <span class="qual-label">Nature</span>
+                <span class="qual-value">Structural shift</span>
+              </div>
+            </div>
+
+            <div class="monitoring"><h4>Key Indicators to Watch</h4><ul><li><span style="color:#ef4444;font-weight:600">[Critical]</span> NVDA Q4 FY2027 revenue guidance vs 60% growth consensus <span style="color:#64748b">(quarterly)</span></li><li><span style="color:#ef4444;font-weight:600">[Critical]</span> Meta capex deployment cadence and actual GPU takedown rates <span style="color:#64748b">(quarterly)</span></li><li><span style="color:#f59e0b;font-weight:600">[Important]</span> TSMC CoWoS packaging capacity utilization rate <span style="color:#64748b">(monthly)</span></li><li><span style="color:#f59e0b;font-weight:600">[Important]</span> Custom ASIC market share in AI inference workloads <span style="color:#64748b">(quarterly)</span></li></ul></div>
+            <div class="key-dates"><h4>Historical Precedents</h4><ul><li><strong>NVDA's crypto mining boom and bust cycle 2017-2018</strong> -- Revenue volatility when single-use case demand collapsed, highlighting customer concentration risks</li><li><strong>Intel's foundry capacity constraints during PC boom 2018-2020</strong> -- Supply shortages limited revenue upside despite strong demand, benefiting competitors like AMD</li></ul></div>
+            <a href="reports/4e0c4ece-bcda-428f-8c10-b962fcc20c75.html" target="_blank" class="report-link">View Full Report</a>
+          </div>
+        </div>
+        
+        <div class="card" onclick="toggleDetail('pdetail-4')">
+          <div class="card-header">
+            <div class="card-title">
+              <span class="portfolio-name">US Mega-Cap Tech</span>
+              <span class="badge" style="background:#f59e0b33;color:#f59e0b">MEDIUM</span>
+            </div>
+            <div class="ev-display" style="color: #22c55e">
+              <span class="ev-value">+0.68%</span>
+            </div>
+          </div>
+          <div class="card-row">
+            <span class="ticker">NVDA.O</span>
+            <span class="sentiment" style="color:#22c55e">positive</span>
+            <span class="position">Position: 20.0%</span>
+            <span class="impact">Portfolio impact: +0.46%</span>
+          </div>
+          <div class="card-summary">NVDA climbs 2.7% as GTC 2026 Rubin unveiling sparks rally.</div>
+
+          <div class="card-detail" id="pdetail-4">
+            <div class="scenarios">
+              <div class="scenario bull">
+                <div class="scenario-header">Bull Case (32%)</div>
+                <div class="scenario-impact" style="color: #22c55e">+2.90%</div>
+                <div class="scenario-desc">Rubin delivers 3.3x+ performance leap; aggressive SaaS expansion announced; stock breaks $200.</div>
+              </div>
+              <div class="scenario base">
+                <div class="scenario-header">Base Case (45%)</div>
+                <div class="scenario-impact">+0.46%</div>
+                <div class="scenario-desc">Successful keynote maintaining leadership; minor profit taking after 2.7% pre-event surge.</div>
+              </div>
+              <div class="scenario bear">
+                <div class="scenario-header">Bear Case (23%)</div>
+                <div class="scenario-impact" style="color: #ef4444">-1.96%</div>
+                <div class="scenario-desc">Specs miss 3.3x target or guidance disappoints; sharp 'sell the news' reversal from highs.</div>
+              </div>
+            </div>
+
+            <div class="qualitative-row">
+              <div class="qual-item">
+                <span class="qual-label">Revenue</span>
+                <span class="qual-value">Improving</span>
+              </div>
+              <div class="qual-item">
+                <span class="qual-label">Profitability</span>
+                <span class="qual-value">Mixed</span>
+              </div>
+              <div class="qual-item">
+                <span class="qual-label">Priced In?</span>
+                <span class="qual-value">Partially Priced</span>
+              </div>
+              <div class="qual-item">
+                <span class="qual-label">Nature</span>
+                <span class="qual-value">Structural shift</span>
+              </div>
+            </div>
+
+            <div class="monitoring"><h4>Key Indicators to Watch</h4><ul><li><span style="color:#ef4444;font-weight:600">[Critical]</span> NVDA Q4 FY2027 revenue guidance vs 60% growth consensus <span style="color:#64748b">(quarterly)</span></li><li><span style="color:#ef4444;font-weight:600">[Critical]</span> Meta capex deployment cadence and actual GPU takedown rates <span style="color:#64748b">(quarterly)</span></li><li><span style="color:#f59e0b;font-weight:600">[Important]</span> TSMC CoWoS packaging capacity utilization rate <span style="color:#64748b">(monthly)</span></li><li><span style="color:#f59e0b;font-weight:600">[Important]</span> Custom ASIC market share in AI inference workloads <span style="color:#64748b">(quarterly)</span></li></ul></div>
+            <div class="key-dates"><h4>Historical Precedents</h4><ul><li><strong>NVDA's crypto mining boom and bust cycle 2017-2018</strong> -- Revenue volatility when single-use case demand collapsed, highlighting customer concentration risks</li><li><strong>Intel's foundry capacity constraints during PC boom 2018-2020</strong> -- Supply shortages limited revenue upside despite strong demand, benefiting competitors like AMD</li></ul></div>
+            <a href="reports/041b1fcb-3c42-4ac2-8bd5-8854a6dc3be0.html" target="_blank" class="report-link">View Full Report</a>
+          </div>
+        </div>
+        
+        <div class="card" onclick="toggleDetail('pdetail-5')">
+          <div class="card-header">
+            <div class="card-title">
+              <span class="portfolio-name">US Fintech & Payments</span>
+              <span class="badge" style="background:#f59e0b33;color:#f59e0b">MEDIUM</span>
+            </div>
+            <div class="ev-display" style="color: #22c55e">
+              <span class="ev-value">+0.67%</span>
+            </div>
+          </div>
+          <div class="card-row">
+            <span class="ticker">COIN.O</span>
+            <span class="sentiment" style="color:#22c55e">positive</span>
+            <span class="position">Position: 15.0%</span>
+            <span class="impact">Portfolio impact: +0.48%</span>
+          </div>
+          <div class="card-summary">Deep dive re-rates COIN to secular growth; strong ETF custody and Deribit drive value.</div>
+
+          <div class="card-detail" id="pdetail-5">
+            <div class="scenarios">
+              <div class="scenario bull">
+                <div class="scenario-header">Bull Case (30%)</div>
+                <div class="scenario-impact" style="color: #22c55e">+2.17%</div>
+                <div class="scenario-desc">Everything Exchange launch accelerated; institutional AUC grows faster than expected.</div>
+              </div>
+              <div class="scenario base">
+                <div class="scenario-header">Base Case (50%)</div>
+                <div class="scenario-impact">+0.48%</div>
+                <div class="scenario-desc">Sustained growth from ETF fees; Everything Exchange launches late 2026 as scheduled.</div>
+              </div>
+              <div class="scenario bear">
+                <div class="scenario-header">Bear Case (20%)</div>
+                <div class="scenario-impact" style="color: #ef4444">-1.12%</div>
+                <div class="scenario-desc">Regulatory hurdles in EU/UAE or crypto market downturn reduces trading volume.</div>
+              </div>
+            </div>
+
+            <div class="qualitative-row">
+              <div class="qual-item">
+                <span class="qual-label">Revenue</span>
+                <span class="qual-value">Mixed</span>
+              </div>
+              <div class="qual-item">
+                <span class="qual-label">Profitability</span>
+                <span class="qual-value">Mixed</span>
+              </div>
+              <div class="qual-item">
+                <span class="qual-label">Priced In?</span>
+                <span class="qual-value">Partially Priced</span>
+              </div>
+              <div class="qual-item">
+                <span class="qual-label">Nature</span>
+                <span class="qual-value">Structural shift</span>
+              </div>
+            </div>
+
+            <div class="monitoring"><h4>Key Indicators to Watch</h4><ul><li><span style="color:#ef4444;font-weight:600">[Critical]</span> Monthly transacting users vs. projected 9.6M <span style="color:#64748b">(quarterly)</span></li><li><span style="color:#f59e0b;font-weight:600">[Important]</span> ARPU trends from current $62.3 toward projected $59.2 <span style="color:#64748b">(quarterly)</span></li><li><span style="color:#ef4444;font-weight:600">[Critical]</span> Institutional transaction revenue growth vs. 62% projection <span style="color:#64748b">(quarterly)</span></li><li><span style="color:#f59e0b;font-weight:600">[Important]</span> Clarity Act legislative progress and banking restriction changes <span style="color:#64748b">(event-driven)</span></li></ul></div>
+            <div class="key-dates"><h4>Historical Precedents</h4><ul><li><strong>Limited direct precedent available</strong> -- Crypto market institutional adoption has been episodic and regulatory-dependent</li><li><strong>N/A</strong> -- No additional precedent available</li></ul></div>
+            <a href="reports/22d161d0-e8e1-470c-a3ad-c91472c465f0.html" target="_blank" class="report-link">View Full Report</a>
+          </div>
+        </div>
+        
+        <div class="card" onclick="toggleDetail('pdetail-6')">
+          <div class="card-header">
+            <div class="card-title">
+              <span class="portfolio-name">US Dividend Blue Chip</span>
+              <span class="badge" style="background:#f59e0b33;color:#f59e0b">MEDIUM</span>
+            </div>
+            <div class="ev-display" style="color: #22c55e">
+              <span class="ev-value">+0.55%</span>
+            </div>
+          </div>
+          <div class="card-row">
+            <span class="ticker">XOM</span>
+            <span class="sentiment" style="color:#22c55e">positive</span>
+            <span class="position">Position: 20.0%</span>
+            <span class="impact">Portfolio impact: +0.48%</span>
+          </div>
+          <div class="card-summary">Dividend strength and rising oil prices drive XOM technical breakout.</div>
+
+          <div class="card-detail" id="pdetail-6">
+            <div class="scenarios">
+              <div class="scenario bull">
+                <div class="scenario-header">Bull Case (35%)</div>
+                <div class="scenario-impact" style="color: #22c55e">+1.76%</div>
+                <div class="scenario-desc">Sector rotation accelerates, oil prices surge significantly, driving shares toward the low 190s target.</div>
+              </div>
+              <div class="scenario base">
+                <div class="scenario-header">Base Case (40%)</div>
+                <div class="scenario-impact">+0.48%</div>
+                <div class="scenario-desc">Steady appreciation supported by stable oil prices and the 3.41% yield, sustaining current momentum.</div>
+              </div>
+              <div class="scenario bear">
+                <div class="scenario-header">Bear Case (25%)</div>
+                <div class="scenario-impact" style="color: #ef4444">-1.04%</div>
+                <div class="scenario-desc">Geopolitical tensions ease, lowering oil prices and reversing sector rotation flows.</div>
+              </div>
+            </div>
+
+            <div class="qualitative-row">
+              <div class="qual-item">
+                <span class="qual-label">Revenue</span>
+                <span class="qual-value">Improving</span>
+              </div>
+              <div class="qual-item">
+                <span class="qual-label">Profitability</span>
+                <span class="qual-value">Mixed</span>
+              </div>
+              <div class="qual-item">
+                <span class="qual-label">Priced In?</span>
+                <span class="qual-value">Partially Priced</span>
+              </div>
+              <div class="qual-item">
+                <span class="qual-label">Nature</span>
+                <span class="qual-value">Structural shift</span>
+              </div>
+            </div>
+
+            <div class="monitoring"><h4>Key Indicators to Watch</h4><ul><li><span style="color:#ef4444;font-weight:600">[Critical]</span> Golden Pass LNG mechanical completion progress <span style="color:#64748b">(monthly)</span></li><li><span style="color:#ef4444;font-weight:600">[Critical]</span> Brent crude price levels <span style="color:#64748b">(daily)</span></li><li><span style="color:#f59e0b;font-weight:600">[Important]</span> Analyst rating and target price revisions <span style="color:#64748b">(quarterly)</span></li><li><span style="color:#f59e0b;font-weight:600">[Important]</span> Chemical industry capacity utilization and polyethylene margins <span style="color:#64748b">(monthly)</span></li></ul></div>
+            <div class="key-dates"><h4>Historical Precedents</h4><ul><li><strong>Previous major LNG project ramp-ups in the 2010s</strong> -- Initial commissioning delays were common, but successful projects generated substantial cash flows within 12-18 months of first production</li><li><strong>Guyana oil discovery development phases since 2015</strong> -- Consistent ahead-of-schedule project delivery and cost discipline have exceeded initial production targets</li></ul></div>
+            <a href="reports/a6bc485a-9272-460f-858c-2b9f4bf4146c.html" target="_blank" class="report-link">View Full Report</a>
+          </div>
+        </div>
+        
+        <div class="card" onclick="toggleDetail('pdetail-7')">
+          <div class="card-header">
+            <div class="card-title">
+              <span class="portfolio-name">US-Malaysia Balanced</span>
+              <span class="badge" style="background:#f59e0b33;color:#f59e0b">MEDIUM</span>
+            </div>
+            <div class="ev-display" style="color: #22c55e">
+              <span class="ev-value">+0.51%</span>
+            </div>
+          </div>
+          <div class="card-row">
+            <span class="ticker">NVDA.O</span>
+            <span class="sentiment" style="color:#22c55e">positive</span>
+            <span class="position">Position: 15.0%</span>
+            <span class="impact">Portfolio impact: +0.34%</span>
+          </div>
+          <div class="card-summary">NVDA climbs 2.7% as GTC 2026 Rubin unveiling sparks rally.</div>
+
+          <div class="card-detail" id="pdetail-7">
+            <div class="scenarios">
+              <div class="scenario bull">
+                <div class="scenario-header">Bull Case (32%)</div>
+                <div class="scenario-impact" style="color: #22c55e">+2.17%</div>
+                <div class="scenario-desc">Rubin delivers 3.3x+ performance leap; aggressive SaaS expansion announced; stock breaks $200.</div>
+              </div>
+              <div class="scenario base">
+                <div class="scenario-header">Base Case (45%)</div>
+                <div class="scenario-impact">+0.34%</div>
+                <div class="scenario-desc">Successful keynote maintaining leadership; minor profit taking after 2.7% pre-event surge.</div>
+              </div>
+              <div class="scenario bear">
+                <div class="scenario-header">Bear Case (23%)</div>
+                <div class="scenario-impact" style="color: #ef4444">-1.47%</div>
+                <div class="scenario-desc">Specs miss 3.3x target or guidance disappoints; sharp 'sell the news' reversal from highs.</div>
+              </div>
+            </div>
+
+            <div class="qualitative-row">
+              <div class="qual-item">
+                <span class="qual-label">Revenue</span>
+                <span class="qual-value">Improving</span>
+              </div>
+              <div class="qual-item">
+                <span class="qual-label">Profitability</span>
+                <span class="qual-value">Mixed</span>
+              </div>
+              <div class="qual-item">
+                <span class="qual-label">Priced In?</span>
+                <span class="qual-value">Partially Priced</span>
+              </div>
+              <div class="qual-item">
+                <span class="qual-label">Nature</span>
+                <span class="qual-value">Structural shift</span>
+              </div>
+            </div>
+
+            <div class="monitoring"><h4>Key Indicators to Watch</h4><ul><li><span style="color:#ef4444;font-weight:600">[Critical]</span> NVDA Q4 FY2027 revenue guidance vs 60% growth consensus <span style="color:#64748b">(quarterly)</span></li><li><span style="color:#ef4444;font-weight:600">[Critical]</span> Meta capex deployment cadence and actual GPU takedown rates <span style="color:#64748b">(quarterly)</span></li><li><span style="color:#f59e0b;font-weight:600">[Important]</span> TSMC CoWoS packaging capacity utilization rate <span style="color:#64748b">(monthly)</span></li><li><span style="color:#f59e0b;font-weight:600">[Important]</span> Custom ASIC market share in AI inference workloads <span style="color:#64748b">(quarterly)</span></li></ul></div>
+            <div class="key-dates"><h4>Historical Precedents</h4><ul><li><strong>NVDA's crypto mining boom and bust cycle 2017-2018</strong> -- Revenue volatility when single-use case demand collapsed, highlighting customer concentration risks</li><li><strong>Intel's foundry capacity constraints during PC boom 2018-2020</strong> -- Supply shortages limited revenue upside despite strong demand, benefiting competitors like AMD</li></ul></div>
+            <a href="reports/9e019084-1129-467f-8df8-38f4ada86533.html" target="_blank" class="report-link">View Full Report</a>
+          </div>
+        </div>
+        
+        <div class="card" onclick="toggleDetail('pdetail-8')">
+          <div class="card-header">
+            <div class="card-title">
+              <span class="portfolio-name">rt_02</span>
+              <span class="badge" style="background:#22c55e33;color:#22c55e">LOW</span>
+            </div>
+            <div class="ev-display" style="color: #22c55e">
+              <span class="ev-value">+0.34%</span>
+            </div>
+          </div>
+          <div class="card-row">
+            <span class="ticker">NVDA.O</span>
+            <span class="sentiment" style="color:#22c55e">positive</span>
+            <span class="position">Position: 10.0%</span>
+            <span class="impact">Portfolio impact: +0.23%</span>
+          </div>
+          <div class="card-summary">NVDA climbs 2.7% as GTC 2026 Rubin unveiling sparks rally.</div>
+
+          <div class="card-detail" id="pdetail-8">
+            <div class="scenarios">
+              <div class="scenario bull">
+                <div class="scenario-header">Bull Case (32%)</div>
+                <div class="scenario-impact" style="color: #22c55e">+1.45%</div>
+                <div class="scenario-desc">Rubin delivers 3.3x+ performance leap; aggressive SaaS expansion announced; stock breaks $200.</div>
+              </div>
+              <div class="scenario base">
+                <div class="scenario-header">Base Case (45%)</div>
+                <div class="scenario-impact">+0.23%</div>
+                <div class="scenario-desc">Successful keynote maintaining leadership; minor profit taking after 2.7% pre-event surge.</div>
+              </div>
+              <div class="scenario bear">
+                <div class="scenario-header">Bear Case (23%)</div>
+                <div class="scenario-impact" style="color: #ef4444">-0.98%</div>
+                <div class="scenario-desc">Specs miss 3.3x target or guidance disappoints; sharp 'sell the news' reversal from highs.</div>
+              </div>
+            </div>
+
+            <div class="qualitative-row">
+              <div class="qual-item">
+                <span class="qual-label">Revenue</span>
+                <span class="qual-value">Improving</span>
+              </div>
+              <div class="qual-item">
+                <span class="qual-label">Profitability</span>
+                <span class="qual-value">Mixed</span>
+              </div>
+              <div class="qual-item">
+                <span class="qual-label">Priced In?</span>
+                <span class="qual-value">Partially Priced</span>
+              </div>
+              <div class="qual-item">
+                <span class="qual-label">Nature</span>
+                <span class="qual-value">Structural shift</span>
+              </div>
+            </div>
+
+            <div class="monitoring"><h4>Key Indicators to Watch</h4><ul><li><span style="color:#ef4444;font-weight:600">[Critical]</span> NVDA Q4 FY2027 revenue guidance vs 60% growth consensus <span style="color:#64748b">(quarterly)</span></li><li><span style="color:#ef4444;font-weight:600">[Critical]</span> Meta capex deployment cadence and actual GPU takedown rates <span style="color:#64748b">(quarterly)</span></li><li><span style="color:#f59e0b;font-weight:600">[Important]</span> TSMC CoWoS packaging capacity utilization rate <span style="color:#64748b">(monthly)</span></li><li><span style="color:#f59e0b;font-weight:600">[Important]</span> Custom ASIC market share in AI inference workloads <span style="color:#64748b">(quarterly)</span></li></ul></div>
+            <div class="key-dates"><h4>Historical Precedents</h4><ul><li><strong>NVDA's crypto mining boom and bust cycle 2017-2018</strong> -- Revenue volatility when single-use case demand collapsed, highlighting customer concentration risks</li><li><strong>Intel's foundry capacity constraints during PC boom 2018-2020</strong> -- Supply shortages limited revenue upside despite strong demand, benefiting competitors like AMD</li></ul></div>
+            <a href="reports/40cb3ae4-2e05-453f-a39d-98271bfcf88b.html" target="_blank" class="report-link">View Full Report</a>
+          </div>
+        </div>
+        
+        <div class="card" onclick="toggleDetail('pdetail-9')">
+          <div class="card-header">
+            <div class="card-title">
+              <span class="portfolio-name">Conservative High-Cash</span>
+              <span class="badge" style="background:#22c55e33;color:#22c55e">LOW</span>
+            </div>
+            <div class="ev-display" style="color: #22c55e">
+              <span class="ev-value">+0.23%</span>
+            </div>
+          </div>
+          <div class="card-row">
+            <span class="ticker">MSFT.O</span>
+            <span class="sentiment" style="color:#22c55e">positive</span>
+            <span class="position">Position: 10.0%</span>
+            <span class="impact">Portfolio impact: +0.18%</span>
+          </div>
+          <div class="card-summary">MSFT integrates Anthropic Claude, updates Windows 11; Outlook delayed.</div>
+
+          <div class="card-detail" id="pdetail-9">
+            <div class="scenarios">
+              <div class="scenario bull">
+                <div class="scenario-header">Bull Case (30%)</div>
+                <div class="scenario-impact" style="color: #22c55e">+0.84%</div>
+                <div class="scenario-desc">Copilot Cowork drives rapid enterprise adoption; Anthropic partnership yields superior margins; Windows update boosts hardware refresh.</div>
+              </div>
+              <div class="scenario base">
+                <div class="scenario-header">Base Case (50%)</div>
+                <div class="scenario-impact">+0.18%</div>
+                <div class="scenario-desc">Market absorbs product updates as incremental; steady adoption of AI features; Outlook delay viewed as prudent risk management.</div>
+              </div>
+              <div class="scenario bear">
+                <div class="scenario-header">Bear Case (20%)</div>
+                <div class="scenario-impact" style="color: #ef4444">-0.56%</div>
+                <div class="scenario-desc">Concerns over high licensing costs for Anthropic models; Outlook delay suggests broader technical issues; competitive AI pressure.</div>
+              </div>
+            </div>
+
+            <div class="qualitative-row">
+              <div class="qual-item">
+                <span class="qual-label">Revenue</span>
+                <span class="qual-value">Improving</span>
+              </div>
+              <div class="qual-item">
+                <span class="qual-label">Profitability</span>
+                <span class="qual-value">Mixed</span>
+              </div>
+              <div class="qual-item">
+                <span class="qual-label">Priced In?</span>
+                <span class="qual-value">Partially Priced</span>
+              </div>
+              <div class="qual-item">
+                <span class="qual-label">Nature</span>
+                <span class="qual-value">Structural shift</span>
+              </div>
+            </div>
+
+            <div class="monitoring"><h4>Key Indicators to Watch</h4><ul><li><span style="color:#ef4444;font-weight:600">[Critical]</span> Microsoft 365 Copilot enterprise subscription growth rates <span style="color:#64748b">(quarterly)</span></li><li><span style="color:#f59e0b;font-weight:600">[Important]</span> Windows 11 enterprise deployment metrics post-March update <span style="color:#64748b">(monthly)</span></li><li><span style="color:#f59e0b;font-weight:600">[Important]</span> Anthropic partnership revenue sharing structure disclosure <span style="color:#64748b">(quarterly)</span></li><li><span style="color:#f59e0b;font-weight:600">[Monitor]</span> Competitor AI partnership announcements and enterprise wins <span style="color:#64748b">(event-driven)</span></li></ul></div>
+            <div class="key-dates"><h4>Historical Precedents</h4><ul><li><strong>Microsoft's 2019 OpenAI partnership announcement and subsequent GPT integration into Office products</strong> -- Drove significant enterprise AI adoption and subscription tier upgrades, validating productivity-focused AI strategy</li><li><strong>Windows 10 feature updates driving enterprise refresh cycles during 2015-2017 period</strong> -- Generated sustained OEM licensing revenue growth and accelerated cloud services adoption</li></ul></div>
+            <a href="reports/92fbd417-cb40-47f0-ad37-be1f80b7b480.html" target="_blank" class="report-link">View Full Report</a>
+          </div>
+        </div>
+        
+        <div class="card" onclick="toggleDetail('pdetail-10')">
+          <div class="card-header">
+            <div class="card-title">
+              <span class="portfolio-name">US Industrials & Defense</span>
+              <span class="badge" style="background:#22c55e33;color:#22c55e">LOW</span>
+            </div>
+            <div class="ev-display" style="color: #22c55e">
+              <span class="ev-value">+0.19%</span>
+            </div>
+          </div>
+          <div class="card-row">
+            <span class="ticker">LMT</span>
+            <span class="sentiment" style="color:#22c55e">positive</span>
+            <span class="position">Position: 20.0%</span>
+            <span class="impact">Portfolio impact: +0.12%</span>
+          </div>
+          <div class="card-summary">LMT secures $779M in DoD contracts for F-35, Aegis, ICBM support</div>
+
+          <div class="card-detail" id="pdetail-10">
+            <div class="scenarios">
+              <div class="scenario bull">
+                <div class="scenario-header">Bull Case (28%)</div>
+                <div class="scenario-impact" style="color: #22c55e">+0.84%</div>
+                <div class="scenario-desc">F-35 Lot 20/21 definitization yields favorable margins; Denmark order accelerates.</div>
+              </div>
+              <div class="scenario base">
+                <div class="scenario-header">Base Case (52%)</div>
+                <div class="scenario-impact">+0.12%</div>
+                <div class="scenario-desc">Modest backlog increase recognized; UCA status prevents significant multiple expansion.</div>
+              </div>
+              <div class="scenario bear">
+                <div class="scenario-header">Bear Case (20%)</div>
+                <div class="scenario-impact" style="color: #ef4444">-0.56%</div>
+                <div class="scenario-desc">Fixed-price pressure on repairs rises; UCA negotiations result in lower margins.</div>
+              </div>
+            </div>
+
+            <div class="qualitative-row">
+              <div class="qual-item">
+                <span class="qual-label">Revenue</span>
+                <span class="qual-value">Improving</span>
+              </div>
+              <div class="qual-item">
+                <span class="qual-label">Profitability</span>
+                <span class="qual-value">Improving</span>
+              </div>
+              <div class="qual-item">
+                <span class="qual-label">Priced In?</span>
+                <span class="qual-value">Partially Priced</span>
+              </div>
+              <div class="qual-item">
+                <span class="qual-label">Nature</span>
+                <span class="qual-value">Structural shift</span>
+              </div>
+            </div>
+
+            <div class="monitoring"><h4>Key Indicators to Watch</h4><ul><li><span style="color:#ef4444;font-weight:600">[Critical]</span> Additional C-130J training contract awards from UK RAF, Canadian Forces, Japan, or other operators <span style="color:#64748b">(quarterly)</span></li><li><span style="color:#f59e0b;font-weight:600">[Important]</span> Training systems segment margin guidance and revenue recognition timing in LMT earnings calls <span style="color:#64748b">(quarterly)</span></li><li><span style="color:#f59e0b;font-weight:600">[Important]</span> RAAF C-130J-30 delivery schedule updates and training equipment timing <span style="color:#64748b">(quarterly)</span></li><li><span style="color:#f59e0b;font-weight:600">[Monitor]</span> Contract value disclosure in SEC filings and competitive trainer announcements from CAE Inc. or L3Harris <span style="color:#64748b">(event-driven)</span></li></ul></div>
+            <div class="key-dates"><h4>Historical Precedents</h4><ul><li><strong>Boeing's integrated training systems for 737 MAX following MCAS issues</strong> -- Enhanced pilot training requirements created new revenue streams and strengthened customer relationships</li><li><strong>General Dynamics' F-16 training system contracts with international operators</strong> -- Multiple follow-on contracts from different air forces using F-16 platforms</li></ul></div>
+            <a href="reports/85541c6c-829c-48e1-b317-f5ee951ee1af.html" target="_blank" class="report-link">View Full Report</a>
+          </div>
+        </div>
+        
+
+    <div class="footer">
+      Generated by Parallax AI at 2026-03-11 02:02 UTC<br>
+      Portfolio impact analysis powered by Claude Sonnet
+    </div>
+  </div>
+
+  <script>
+    function toggleDetail(id) {
+      const el = document.getElementById(id);
+      if (el) el.classList.toggle('open');
+    }
+  </script>
+</body>
+</html>

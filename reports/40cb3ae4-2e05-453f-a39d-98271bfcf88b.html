@@ -1,0 +1,1135 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>NVDA.O - Portfolio Impact Analysis</title>
+    <style>
+        :root {
+            /* GrandPine Color Palette */
+            --bg-primary: #0A0E1A;
+            --bg-secondary: #111827;
+            --bg-card: #141927;
+            --bg-card-hover: #1C2333;
+
+            --text-primary: #FFFFFF;
+            --text-secondary: #9CA3AF;
+            --text-muted: #6B7280;
+
+            --accent-blue: #3B82F6;
+            --accent-cyan: #06B6D4;
+            --accent-purple: #8B5CF6;
+
+            --positive: #10B981;
+            --positive-light: #34D399;
+            --positive-bg: rgba(16, 185, 129, 0.12);
+
+            --negative: #EF4444;
+            --negative-light: #F87171;
+            --negative-bg: rgba(239, 68, 68, 0.12);
+
+            --warning: #F59E0B;
+            --warning-bg: rgba(245, 158, 11, 0.12);
+
+            --neutral-bg: rgba(59, 130, 246, 0.12);
+
+            --border-subtle: rgba(255, 255, 255, 0.06);
+            --border-light: rgba(255, 255, 255, 0.1);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'SF Pro Text', 'Helvetica Neue', sans-serif;
+            background: linear-gradient(180deg, #0F172A 0%, #0A0E1A 100%);
+            color: var(--text-primary);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 40px 20px;
+            overflow-x: hidden;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+        }
+
+        .iphone-frame {
+            width: 390px;
+            height: 844px;
+            background: #000;
+            border-radius: 55px;
+            padding: 12px;
+            box-shadow:
+                0 0 0 8px #1c1c1e,
+                0 0 0 10px #2c2c2e,
+                0 25px 80px rgba(0, 0, 0, 0.6),
+                inset 0 0 6px rgba(255, 255, 255, 0.08);
+            position: relative;
+        }
+
+        .iphone-notch {
+            position: absolute;
+            top: 12px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 150px;
+            height: 30px;
+            background: #000;
+            border-radius: 0 0 20px 20px;
+            z-index: 10;
+        }
+
+        .iphone-screen {
+            width: 100%;
+            height: 100%;
+            background: var(--bg-primary);
+            border-radius: 45px;
+            overflow-y: auto;
+            overflow-x: hidden;
+            position: relative;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .iphone-screen::-webkit-scrollbar {
+            width: 3px;
+        }
+
+        .iphone-screen::-webkit-scrollbar-thumb {
+            background: rgba(59, 130, 246, 0.4);
+            border-radius: 10px;
+        }
+
+        .page {
+            flex: 1;
+            padding: 50px 20px 20px 20px;
+            display: none;
+            flex-direction: column;
+        }
+
+        .page.active {
+            display: flex;
+        }
+
+        .page-indicator {
+            position: absolute;
+            top: 15px;
+            right: 20px;
+            font-size: 11px;
+            color: var(--text-muted);
+            font-weight: 600;
+            background: rgba(255, 255, 255, 0.05);
+            padding: 4px 12px;
+            border-radius: 20px;
+            letter-spacing: 0.3px;
+        }
+
+        .title {
+            font-size: 28px;
+            font-weight: 700;
+            line-height: 1.15;
+            margin-bottom: 8px;
+            color: var(--text-primary);
+            letter-spacing: -0.5px;
+        }
+
+        .subtitle {
+            font-size: 14px;
+            color: var(--text-secondary);
+            margin-bottom: 24px;
+            font-weight: 400;
+        }
+
+        /* Alert Banner Styles */
+        .alert-banner {
+            background: var(--negative-bg);
+            border: 1px solid rgba(239, 68, 68, 0.2);
+            padding: 14px 16px;
+            border-radius: 12px;
+            margin-bottom: 20px;
+        }
+
+        .alert-banner.positive {
+            background: var(--positive-bg);
+            border-color: rgba(16, 185, 129, 0.2);
+        }
+
+        .alert-banner.neutral {
+            background: var(--neutral-bg);
+            border-color: rgba(59, 130, 246, 0.2);
+        }
+
+        .alert-title {
+            font-size: 13px;
+            font-weight: 600;
+            color: var(--negative-light);
+            margin-bottom: 6px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .alert-banner.positive .alert-title {
+            color: var(--positive-light);
+        }
+
+        .alert-banner.neutral .alert-title {
+            color: var(--accent-blue);
+        }
+
+        .alert-text {
+            font-size: 13px;
+            color: var(--text-secondary);
+            line-height: 1.5;
+        }
+
+        /* Metrics Grid */
+        .metrics-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 12px;
+            margin-bottom: 20px;
+        }
+
+        .metric-card {
+            background: var(--bg-card);
+            padding: 16px;
+            border-radius: 16px;
+            border: 1px solid var(--border-subtle);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .metric-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: transparent;
+            border-radius: 16px 16px 0 0;
+        }
+
+        .metric-card.negative::before {
+            background: linear-gradient(90deg, var(--negative), transparent);
+        }
+
+        .metric-card.positive::before {
+            background: linear-gradient(90deg, var(--positive), transparent);
+        }
+
+        .metric-card.neutral::before {
+            background: linear-gradient(90deg, var(--accent-blue), transparent);
+        }
+
+        .metric-card.warning::before {
+            background: linear-gradient(90deg, var(--warning), transparent);
+        }
+
+        .metric-label-top {
+            font-size: 11px;
+            color: var(--text-muted);
+            margin-bottom: 8px;
+            text-transform: uppercase;
+            letter-spacing: 0.8px;
+            font-weight: 500;
+        }
+
+        .metric-value-large {
+            font-size: 26px;
+            font-weight: 700;
+            color: var(--text-primary);
+            letter-spacing: -0.5px;
+        }
+
+        .metric-subtitle {
+            font-size: 11px;
+            color: var(--text-muted);
+            margin-top: 4px;
+        }
+
+        /* Pill Badge for percentages */
+        .pill-badge {
+            display: inline-flex;
+            align-items: center;
+            padding: 4px 10px;
+            border-radius: 20px;
+            font-size: 13px;
+            font-weight: 600;
+            letter-spacing: -0.2px;
+        }
+
+        .pill-badge.negative {
+            background: var(--negative-bg);
+            color: var(--negative-light);
+        }
+
+        .pill-badge.positive {
+            background: var(--positive-bg);
+            color: var(--positive-light);
+        }
+
+        .pill-badge.neutral {
+            background: var(--neutral-bg);
+            color: var(--accent-blue);
+        }
+
+        /* Table Section */
+        .table-section {
+            background: var(--bg-card);
+            border-radius: 16px;
+            margin-bottom: 16px;
+            overflow: hidden;
+            border: 1px solid var(--border-subtle);
+        }
+
+        .table-header {
+            background: rgba(59, 130, 246, 0.08);
+            padding: 12px 16px;
+            font-size: 13px;
+            font-weight: 600;
+            color: var(--accent-blue);
+            border-bottom: 1px solid var(--border-subtle);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .table-header.bull {
+            background: rgba(16, 185, 129, 0.08);
+            color: var(--positive);
+        }
+
+        .table-header.bear {
+            background: rgba(239, 68, 68, 0.08);
+            color: var(--negative);
+        }
+
+        .table-content {
+            padding: 12px 16px;
+        }
+
+        .table-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px 0;
+            border-bottom: 1px solid var(--border-subtle);
+        }
+
+        .table-row:last-child {
+            border-bottom: none;
+        }
+
+        .table-cell-label {
+            font-size: 13px;
+            color: var(--text-secondary);
+            font-weight: 400;
+        }
+
+        .table-cell-value {
+            font-size: 14px;
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+
+        .value-negative {
+            color: var(--negative-light);
+        }
+
+        .value-positive {
+            color: var(--positive-light);
+        }
+
+        /* Info Box */
+        .info-box {
+            background: rgba(59, 130, 246, 0.06);
+            border: 1px solid rgba(59, 130, 246, 0.15);
+            padding: 14px 16px;
+            border-radius: 12px;
+            font-size: 12px;
+            line-height: 1.6;
+            color: var(--text-secondary);
+            margin-bottom: 16px;
+        }
+
+        .info-box strong {
+            color: var(--text-primary);
+            font-weight: 500;
+        }
+
+        /* Takeaway Box */
+        .takeaway-box {
+            background: var(--positive-bg);
+            border: 1px solid rgba(16, 185, 129, 0.15);
+            padding: 16px;
+            border-radius: 12px;
+            margin-bottom: 20px;
+        }
+
+        .takeaway-box.negative {
+            background: var(--negative-bg);
+            border-color: rgba(239, 68, 68, 0.15);
+        }
+
+        .takeaway-box.neutral {
+            background: var(--neutral-bg);
+            border-color: rgba(59, 130, 246, 0.15);
+        }
+
+        .takeaway-title {
+            font-size: 12px;
+            font-weight: 600;
+            color: var(--positive);
+            margin-bottom: 12px;
+            text-transform: uppercase;
+            letter-spacing: 0.8px;
+        }
+
+        .takeaway-box.negative .takeaway-title {
+            color: var(--negative-light);
+        }
+
+        .takeaway-box.neutral .takeaway-title {
+            color: var(--accent-blue);
+        }
+
+        .takeaway-item {
+            font-size: 13px;
+            line-height: 1.6;
+            color: var(--text-secondary);
+            margin-bottom: 8px;
+        }
+
+        /* Navigation */
+        .navigation {
+            position: sticky;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            background: rgba(10, 14, 26, 0.95);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            padding: 14px 20px 22px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: auto;
+            z-index: 100;
+            border-top: 1px solid var(--border-subtle);
+        }
+
+        .nav-button {
+            background: var(--accent-blue);
+            color: white;
+            border: none;
+            padding: 10px 18px;
+            border-radius: 10px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .nav-button:disabled {
+            background: rgba(255, 255, 255, 0.08);
+            color: var(--text-muted);
+            cursor: not-allowed;
+        }
+
+        .nav-button:not(:disabled):active {
+            transform: scale(0.96);
+            opacity: 0.9;
+        }
+
+        .dots {
+            display: flex;
+            gap: 6px;
+        }
+
+        .dot {
+            width: 6px;
+            height: 6px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.2);
+            cursor: pointer;
+            transition: all 0.25s ease;
+        }
+
+        .dot.active {
+            background: var(--accent-blue);
+            width: 20px;
+            border-radius: 3px;
+        }
+
+        /* Bullet List */
+        .bullet-list {
+            list-style: none;
+            padding: 0;
+        }
+
+        .bullet-list li {
+            font-size: 13px;
+            line-height: 1.6;
+            color: var(--text-secondary);
+            margin-bottom: 8px;
+            padding-left: 16px;
+            position: relative;
+        }
+
+        .bullet-list li:before {
+            content: "";
+            position: absolute;
+            left: 0;
+            top: 8px;
+            width: 4px;
+            height: 4px;
+            border-radius: 50%;
+            background: var(--accent-blue);
+        }
+
+        /* Clickable Metrics */
+        .clickable-metric {
+            cursor: pointer;
+            transition: all 0.15s ease;
+            position: relative;
+            border-radius: 8px;
+            margin: 0 -8px;
+            padding-left: 8px;
+            padding-right: 8px;
+        }
+
+        .clickable-metric:hover {
+            background: rgba(59, 130, 246, 0.08);
+        }
+
+        .clickable-metric:active {
+            background: rgba(59, 130, 246, 0.12);
+        }
+
+        .table-cell-label-with-icon {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .info-icon {
+            font-size: 11px;
+            opacity: 0.5;
+        }
+
+        /* Back Button Sticky */
+        .back-button-sticky {
+            position: sticky;
+            top: 50px;
+            left: 0;
+            width: calc(100% + 40px);
+            margin-left: -20px;
+            margin-top: -50px;
+            background: rgba(10, 14, 26, 0.95);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            padding: 12px 20px 14px 20px;
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+            z-index: 50;
+            border-bottom: 1px solid var(--border-subtle);
+            margin-bottom: 20px;
+        }
+
+        .metric-name-header {
+            font-size: 18px;
+            font-weight: 600;
+            color: var(--accent-cyan);
+            margin-top: 2px;
+        }
+
+        .back-button {
+            background: rgba(59, 130, 246, 0.15);
+            color: var(--accent-blue);
+            border: 1px solid rgba(59, 130, 246, 0.3);
+            padding: 8px 14px;
+            border-radius: 8px;
+            font-size: 13px;
+            font-weight: 600;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            transition: all 0.2s ease;
+            width: fit-content;
+        }
+
+        .back-button:hover {
+            background: rgba(59, 130, 246, 0.25);
+        }
+
+        .back-button:active {
+            transform: scale(0.96);
+        }
+
+        /* Definition Section */
+        .definition-section {
+            margin-bottom: 28px;
+            padding-bottom: 20px;
+            border-bottom: 1px solid var(--border-subtle);
+            display: none;
+        }
+
+        .definition-section.show {
+            display: block;
+        }
+
+        .definition-section:last-child {
+            border-bottom: none;
+        }
+
+        .definition-title {
+            font-size: 16px;
+            font-weight: 600;
+            color: var(--accent-blue);
+            margin-bottom: 12px;
+        }
+
+        .definition-content {
+            font-size: 13px;
+            line-height: 1.7;
+            color: var(--text-secondary);
+        }
+
+        .definition-content strong {
+            color: var(--accent-cyan);
+            font-weight: 500;
+        }
+
+        .definition-example {
+            background: rgba(59, 130, 246, 0.06);
+            border: 1px solid rgba(59, 130, 246, 0.12);
+            padding: 12px;
+            border-radius: 10px;
+            margin-top: 12px;
+            font-size: 12px;
+            line-height: 1.6;
+            color: var(--text-secondary);
+        }
+
+        .definition-example.warning {
+            background: rgba(239, 68, 68, 0.08);
+            border-color: rgba(239, 68, 68, 0.15);
+        }
+
+        /* Scenario Description */
+        .scenario-description {
+            font-size: 13px;
+            line-height: 1.5;
+            color: var(--text-secondary);
+            margin-bottom: 12px;
+            padding: 10px 12px;
+            background: rgba(255, 255, 255, 0.03);
+            border-radius: 8px;
+        }
+
+        .scenario-description strong {
+            color: var(--text-primary);
+            font-weight: 500;
+        }
+
+        /* Link Styling */
+        a, .link-style {
+            color: var(--accent-cyan);
+            text-decoration: none;
+            font-weight: 500;
+            cursor: pointer;
+        }
+
+        a:hover, .link-style:hover {
+            text-decoration: underline;
+        }
+
+        /* ===== Page 2: Qualitative Analysis Styles ===== */
+
+        .analysis-section {
+            margin-bottom: 16px;
+        }
+
+        .analysis-section-title {
+            font-size: 12px;
+            font-weight: 600;
+            color: var(--accent-cyan);
+            text-transform: uppercase;
+            letter-spacing: 0.8px;
+            margin-bottom: 8px;
+        }
+
+        .analysis-section-body {
+            font-size: 13px;
+            line-height: 1.6;
+            color: var(--text-secondary);
+            background: var(--bg-card);
+            border: 1px solid var(--border-subtle);
+            border-radius: 12px;
+            padding: 14px 16px;
+        }
+
+        /* Fundamental Impact Cards */
+        .fundamentals-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 10px;
+            margin-bottom: 16px;
+        }
+
+        .fundamental-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border-subtle);
+            border-radius: 12px;
+            padding: 12px 14px;
+        }
+
+        .fundamental-card-label {
+            font-size: 11px;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.6px;
+            margin-bottom: 6px;
+            font-weight: 500;
+        }
+
+        .fundamental-card-impact {
+            font-size: 12px;
+            color: var(--text-secondary);
+            line-height: 1.5;
+        }
+
+        /* Direction Badge - Outcome-oriented labels */
+        .direction-badge {
+            display: inline-block;
+            font-size: 10px;
+            font-weight: 700;
+            padding: 2px 8px;
+            border-radius: 10px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 4px;
+        }
+
+        .direction-badge.improving {
+            background: var(--positive-bg);
+            color: var(--positive-light);
+        }
+
+        .direction-badge.worsening {
+            background: var(--negative-bg);
+            color: var(--negative-light);
+        }
+
+        .direction-badge.mixed {
+            background: var(--warning-bg);
+            color: var(--warning);
+        }
+
+        .direction-badge.stable {
+            background: var(--neutral-bg);
+            color: var(--accent-blue);
+        }
+
+        /* Legacy support (backward compatibility - will be removed in Phase 4) */
+        .direction-badge.up {
+            background: var(--positive-bg);
+            color: var(--positive-light);
+        }
+
+        .direction-badge.down {
+            background: var(--negative-bg);
+            color: var(--negative-light);
+        }
+
+        .direction-badge.neutral {
+            background: var(--neutral-bg);
+            color: var(--accent-blue);
+        }
+
+        /* Pricing Badge */
+        .pricing-badge {
+            display: inline-block;
+            font-size: 11px;
+            font-weight: 600;
+            padding: 3px 10px;
+            border-radius: 10px;
+            letter-spacing: 0.3px;
+            background: var(--warning-bg);
+            color: var(--warning);
+        }
+
+        /* Precedent Row */
+        .precedent-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border-subtle);
+            border-radius: 12px;
+            padding: 12px 14px;
+            margin-bottom: 10px;
+        }
+
+        .precedent-event {
+            font-size: 13px;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-bottom: 4px;
+        }
+
+        .precedent-detail {
+            font-size: 12px;
+            color: var(--text-secondary);
+            line-height: 1.5;
+        }
+
+        /* Indicator Row */
+        .indicator-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px 0;
+            border-bottom: 1px solid var(--border-subtle);
+        }
+
+        .indicator-row:last-child {
+            border-bottom: none;
+        }
+
+        .indicator-name {
+            font-size: 13px;
+            color: var(--text-secondary);
+            font-weight: 400;
+        }
+
+        .indicator-watch {
+            font-size: 12px;
+            font-weight: 600;
+            color: var(--accent-cyan);
+            text-align: right;
+        }
+
+        /* Long-term thesis badge */
+        .thesis-badge {
+            display: inline-block;
+            font-size: 11px;
+            font-weight: 600;
+            padding: 3px 10px;
+            border-radius: 10px;
+            background: var(--positive-bg);
+            color: var(--positive-light);
+            margin-bottom: 6px;
+        }
+
+        /* Compliance notice */
+        .compliance-notice {
+            background: rgba(245, 158, 11, 0.08);
+            border: 1px solid rgba(245, 158, 11, 0.15);
+            padding: 12px 14px;
+            border-radius: 10px;
+            font-size: 11px;
+            line-height: 1.5;
+            color: var(--text-muted);
+            margin-top: 12px;
+        }
+
+        .compliance-notice strong {
+            color: var(--warning);
+        }
+    </style>
+</head>
+<body>
+    <div class="iphone-frame">
+        <div class="iphone-notch"></div>
+        <div class="iphone-screen">
+            <!-- Page 1: Executive Summary -->
+            <div class="page active" id="page1">
+                <div class="page-indicator">1 of 3</div>
+                <h1 class="title">Portfolio Impact<br>Analysis</h1>
+                <p class="subtitle">NVDA.O (NVDA.O)</p>
+
+                <div class="alert-banner positive">
+                    <div class="alert-title">NVDA.O</div>
+                    <div class="alert-text">
+                        NVDA climbs 2.7% as GTC 2026 Rubin unveiling sparks rally.
+                    </div>
+                </div>
+
+                <div class="metrics-grid">
+                    <div class="metric-card positive">
+                        <div class="metric-label-top">Portfolio Impact</div>
+                        <div class="metric-value-large"><span class="pill-badge positive">+0.23%</span></div>
+                        <div class="metric-subtitle">+0.23% ($ +230)</div>
+                    </div>
+                    <div class="metric-card positive">
+                        <div class="metric-label-top">Position Size</div>
+                        <div class="metric-value-large">10.0%</div>
+                        <div class="metric-subtitle">of portfolio</div>
+                    </div>
+                    <div class="metric-card positive">
+                        <div class="metric-label-top">Risk Rating</div>
+                        <div class="metric-value-large">LOW</div>
+                        <div class="metric-subtitle">Exposure level</div>
+                    </div>
+                    <div class="metric-card neutral">
+                        <div class="metric-label-top">Cash Buffer</div>
+                        <div class="metric-value-large" style="font-size: 20px;">0%</div>
+                        <div class="metric-subtitle">fully invested</div>
+                    </div>
+                </div>
+
+                <div class="takeaway-box positive">
+                    <div class="takeaway-title">Expected Value</div>
+                    <div class="takeaway-item">Probability-weighted outcome: +0.34% ($ +342)</div>
+                </div>
+
+                <div class="info-box">
+                    <strong>Source:</strong>
+                    <a href="http://business.times-online.com/times-online/article/marketminute-2026-3-10-nvidia-surges-as-ai-super-bowl-approaches-gtc-2026-set-to-unveil-the-rubin-era" target="_blank" rel="noopener">Business</a>
+                </div>
+
+                <div class="compliance-notice">
+                    <strong>Not Investment Advice:</strong> This analysis is for informational purposes only. It does not constitute investment advice or a recommendation to buy or sell. Consult a financial advisor before making investment decisions.
+                </div>
+            </div>
+
+            <!-- Page 2: Qualitative Analysis -->
+            <div class="page" id="page2">
+                <div class="page-indicator">2 of 3</div>
+                <h1 class="title">Qualitative<br>Analysis</h1>
+                <p class="subtitle">NVDA.O &mdash; What It Means</p>
+
+                <!-- Macro/Regulatory Drivers -->
+                <div class="analysis-section">
+                    <div class="analysis-section-title">Macro &amp; Regulatory Drivers</div>
+                    <div class="analysis-section-body">The AI infrastructure buildout represents a multi-year capital cycle driven by enterprise digital transformation and hyperscaler competition for AI dominance. Export control policies remain a key regulatory overhang, with potential tightening of China restrictions creating TAM headwinds of $20-40B for advanced GPU sales.</div>
+                </div>
+
+                <!-- Industry Value Chain -->
+                <div class="analysis-section">
+                    <div class="analysis-section-title">Industry Value Chain Impact</div>
+                    <div class="analysis-section-body">The Meta partnership validates sustained demand across the AI value chain, benefiting TSMC&#x27;s CoWoS packaging capacity and HBM suppliers despite margin pressures. Custom ASIC competition from Google TPU and Broadcom threatens NVDA&#x27;s inference market share, while power grid constraints emerge as a bottleneck limiting hyperscaler deployment speed regardless of chip availability.</div>
+                </div>
+
+                <!-- Long-term vs Noise -->
+                <div class="analysis-section">
+                    <div class="analysis-section-title">Long-term vs Noise</div>
+                    <div class="analysis-section-body">
+                        <span class="thesis-badge">Structural shift</span>
+                        <div style="margin-top: 6px;">Multi-generational GPU commitments from Meta spanning Blackwell through Vera Rubin indicate sustained AI infrastructure investment beyond typical product cycles. The shift toward custom silicon for inference workloads represents a permanent competitive dynamic rather than temporary market noise.</div>
+                    </div>
+                </div>
+
+                <!-- Fundamental Impacts Grid -->
+                <div class="analysis-section">
+                    <div class="analysis-section-title">Fundamental Impacts</div>
+                    <div class="fundamentals-grid">
+                        <div class="fundamental-card">
+                            <div class="fundamental-card-label">Revenue</div>
+                            <span class="direction-badge improving">improving</span>
+                            <div class="fundamental-card-impact">Multi-year GPU commitment from Meta provides revenue visibility through FY2027, with potential for 60%+ growth if deployment accelerates. Customer concentration risk emerges if Meta represents &gt;10% of total revenue, creating headline volatility despite underlying demand strength.</div>
+                        </div>
+                        <div class="fundamental-card">
+                            <div class="fundamental-card-label">Cost Structure</div>
+                            <span class="direction-badge worsening">worsening</span>
+                            <div class="fundamental-card-impact">HBM cost inflation could compress gross margins by 100bps despite strong pricing power, while CoWoS packaging constraints at TSMC may require premium pricing to secure capacity. Supply chain bottlenecks limit production scaling efficiency through H2 2026.</div>
+                        </div>
+                        <div class="fundamental-card">
+                            <div class="fundamental-card-label">Profitability</div>
+                            <span class="direction-badge mixed">mixed</span>
+                            <div class="fundamental-card-impact">Revenue growth from Meta partnership could drive earnings expansion if gross margins hold above 74%, though HBM cost pass-through pressures profitability. Execution risk around Vera Rubin ramp timing affects margin sustainability and guidance credibility.</div>
+                        </div>
+                        <div class="fundamental-card">
+                            <div class="fundamental-card-label">Positioning</div>
+                            <span class="direction-badge mixed">mixed</span>
+                            <div class="fundamental-card-impact">Multi-generational partnership validates NVDA&#x27;s AI leadership and reduces execution risk, strengthening competitive moat. However, custom ASIC adoption by hyperscalers for inference workloads threatens long-term market share, particularly if competitors gain &gt;15% inference market penetration.</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Pricing Assessment -->
+                <div class="analysis-section">
+                    <div class="analysis-section-title">Pricing Assessment</div>
+                    <div class="analysis-section-body">
+                        <span class="pricing-badge">Partially Priced In</span>
+                        <div style="margin-top: 6px;">Market likely anticipates strong AI demand but may not fully reflect the revenue visibility and de-risking provided by multi-year commitments. Execution concerns around packaging capacity and competitive threats from custom silicon remain underappreciated risks.</div>
+                    </div>
+                </div>
+
+                <!-- Historical Precedents -->
+                <div class="analysis-section">
+                    <div class="analysis-section-title">Historical Precedents</div>
+                    <div class="precedent-card">
+                        <div class="precedent-event">NVDA&#x27;s crypto mining boom and bust cycle 2017-2018</div>
+                        <div class="precedent-detail">Revenue volatility when single-use case demand collapsed, highlighting customer concentration risks</div>
+                        <div class="precedent-detail" style="color: var(--accent-cyan); margin-top: 2px;">Demonstrates importance of diversified demand sources and sustainable use cases for maintaining valuation premiums</div>
+                    </div>
+                    <div class="precedent-card">
+                        <div class="precedent-event">Intel&#x27;s foundry capacity constraints during PC boom 2018-2020</div>
+                        <div class="precedent-detail">Supply shortages limited revenue upside despite strong demand, benefiting competitors like AMD</div>
+                        <div class="precedent-detail" style="color: var(--accent-cyan); margin-top: 2px;">CoWoS packaging bottlenecks could similarly constrain NVDA&#x27;s ability to capitalize on AI demand surge</div>
+                    </div>
+                    <div class="info-box" style="margin-top: 6px;">
+                        <strong>Lessons:</strong> Historical parallels suggest monitoring over 12-24 months for full impact.
+                    </div>
+                </div>
+
+                <!-- Key Indicators to Monitor -->
+                <div class="analysis-section">
+                    <div class="analysis-section-title">Key Indicators to Monitor</div>
+                    <div class="table-section" style="margin-bottom: 0;">
+                        <div class="table-content">
+                            <div class="indicator-row">
+                                <span class="indicator-name">NVDA Q4 FY2027 revenue guidance vs 60% growth consensus</span>
+                                <span class="indicator-watch">Critical</span>
+                            </div>
+                            <div class="indicator-row">
+                                <span class="indicator-name">Meta capex deployment cadence and actual GPU takedown rates</span>
+                                <span class="indicator-watch">Critical</span>
+                            </div>
+                            <div class="indicator-row">
+                                <span class="indicator-name">TSMC CoWoS packaging capacity utilization rate</span>
+                                <span class="indicator-watch">Important</span>
+                            </div>
+                            <div class="indicator-row">
+                                <span class="indicator-name">Custom ASIC market share in AI inference workloads</span>
+                                <span class="indicator-watch">Important</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Page 3: Scenario Analysis -->
+            <div class="page" id="page3">
+                <div class="page-indicator">3 of 3</div>
+                <h1 class="title">Scenario<br>Analysis</h1>
+                <p class="subtitle">Potential Outcomes &amp; Portfolio Impact</p>
+
+                <div class="table-section">
+                    <div class="table-header bull">Bull Case (32%)</div>
+                    <div class="table-content">
+                        <div class="scenario-description">
+                            <strong>Scenario:</strong> Rubin delivers 3.3x+ performance leap; aggressive SaaS expansion announced; stock breaks $200.
+                        </div>
+                        <div class="table-row">
+                            <span class="table-cell-label">Portfolio Impact</span>
+                            <span class="table-cell-value value-positive">+1.45% ($ +1,450)</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="table-section">
+                    <div class="table-header">Base Case (45%)</div>
+                    <div class="table-content">
+                        <div class="scenario-description">
+                            <strong>Scenario:</strong> Successful keynote maintaining leadership; minor profit taking after 2.7% pre-event surge.
+                        </div>
+                        <div class="table-row">
+                            <span class="table-cell-label">Portfolio Impact</span>
+                            <span class="table-cell-value">+0.23% ($ +230)</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="table-section">
+                    <div class="table-header bear">Bear Case (23%)</div>
+                    <div class="table-content">
+                        <div class="scenario-description">
+                            <strong>Scenario:</strong> Specs miss 3.3x target or guidance disappoints; sharp &#x27;sell the news&#x27; reversal from highs.
+                        </div>
+                        <div class="table-row">
+                            <span class="table-cell-label">Portfolio Impact</span>
+                            <span class="table-cell-value value-negative">-0.98% ($ -980)</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="info-box" style="background: var(--warning-bg); border-color: rgba(245, 158, 11, 0.2);">
+                    <strong>Expected Value:</strong> Probability-weighted outcome: <span class="pill-badge positive" style="font-size: 11px; padding: 2px 8px;">+0.34%</span> portfolio impact ($ +342).
+                </div>
+
+                <div class="compliance-notice">
+                    <strong>Not Investment Advice:</strong> Scenarios are illustrative, not predictions. Actual outcomes may differ materially. Consult a financial advisor before making investment decisions.
+                </div>
+            </div>
+
+            <!-- Page 4 removed as of 2026-02-12 quality audit:
+                 Generic definitions without real position-level data add no analytical value.
+                 Will be restored in Phase 4 when position-level risk metrics are available. -->
+
+            <div class="navigation">
+                <button class="nav-button previous" onclick="goToPreviousPage()" id="prevBtn">Previous</button>
+                <div class="dots" id="dotsContainer">
+                    <div class="dot active" onclick="goToPage(1)"></div>
+                    <div class="dot" onclick="goToPage(2)"></div>
+                    <div class="dot" onclick="goToPage(3)"></div>
+                </div>
+                <button class="nav-button next" onclick="goToNextPage()" id="nextBtn">Next</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let currentPage = 1;
+        const totalPages = 3;
+        let previousPage = 1;
+        let previousScrollPosition = 0;
+
+        function goToPage(pageNum) {
+            if (pageNum < 1 || pageNum > totalPages) return;
+
+            if (currentPage !== 4) {
+                previousScrollPosition = document.getElementById('page' + currentPage).parentElement.scrollTop;
+            }
+
+            document.getElementById('page' + currentPage).classList.remove('active');
+            currentPage = pageNum;
+            document.getElementById('page' + currentPage).classList.add('active');
+
+            document.querySelector('.iphone-screen').scrollTop = 0;
+
+            updateAllDots();
+        }
+
+        // Page 4 navigation functions removed as of 2026-02-12 quality audit
+        // (Page 4 removed - will be restored in Phase 4 with real position-level data)
+
+        function updateAllDots() {
+            document.querySelectorAll('.dot').forEach(function(dot, index) {
+                if (index + 1 === currentPage) {
+                    dot.classList.add('active');
+                } else {
+                    dot.classList.remove('active');
+                }
+            });
+
+            document.getElementById('prevBtn').disabled = currentPage === 1;
+            document.getElementById('nextBtn').disabled = currentPage === totalPages;
+        }
+
+        function goToNextPage() {
+            if (currentPage < totalPages) {
+                goToPage(currentPage + 1);
+            }
+        }
+
+        function goToPreviousPage() {
+            if (currentPage > 1) {
+                goToPage(currentPage - 1);
+            }
+        }
+
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'ArrowRight') goToNextPage();
+            if (e.key === 'ArrowLeft') goToPreviousPage();
+        });
+    </script>
+</body>
+</html>
